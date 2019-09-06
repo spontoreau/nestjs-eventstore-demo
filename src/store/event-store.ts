@@ -18,4 +18,8 @@ export class EventStore {
   close() {
     this.client.close();
   }
+
+  newEvent(type: string, data: object) {
+    return this.factory.newEvent(type, data);
+  }
 }
