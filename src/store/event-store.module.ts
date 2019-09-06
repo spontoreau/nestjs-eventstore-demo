@@ -6,4 +6,4 @@ import { EventStoreConfiguration } from "./event-store.configuration";
   providers: [EventStoreConfiguration],
   exports: []
 })
-export class StoreModule { }
+export class EventStoreModule { }
