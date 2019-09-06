@@ -1,12 +1,13 @@
-import { TCPClient, EventFactory } from "geteventstore-promise";
+import { TCPClient } from "geteventstore-promise";
 import { EventStoreConfiguration } from "./event-store.configuration";
+import { EventStoreException } from "./event-store.exception";
+import { Event } from "./event";
 
 export class EventStore {
   private client!: TCPClient;
 
   constructor(
-    private configuration: EventStoreConfiguration,
-    private factory: EventFactory = new EventFactory()
+    private configuration: EventStoreConfiguration
   ) {
     
   }
@@ -19,7 +20,17 @@ export class EventStore {
     this.client.close();
   }
 
-  newEvent(type: string, data: object) {
-    return this.factory.newEvent(type, data);
+  createEvent(event: Event) {
+    if(!event) {
+      throw new EventStoreException("Event is required!");
+    }
+
+    const exists = this.client.checkStreamExists(event.streamName);
+
+    if(!exists) {
+      throw new EventStoreException(`Unknow stream: ${ event.streamName }!`)
+    }
+
+    this.client.writeEvent(event.streamName, event.type, event.data);
   }
 }
