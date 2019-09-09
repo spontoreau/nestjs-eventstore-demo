@@ -6,6 +6,6 @@ import { EventStorePublisher } from "./event-store.publisher";
 @Global()
 @Module({
   providers: [EventStoreConfiguration, EventStore],
-  exports: [EventStorePublisher]
+  exports: [EventStorePublisher, EventStore]
 })
 export class EventStoreModule { }
