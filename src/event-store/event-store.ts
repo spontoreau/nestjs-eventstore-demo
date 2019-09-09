@@ -28,7 +28,6 @@ export class EventStore {
     return await this.client.checkStreamExists(streamName);
   }
 
-
   async createEvent(event: Event) {
     if(!event) {
       throw new EventStoreException("Event is required!");
