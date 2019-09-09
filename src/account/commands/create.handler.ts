@@ -13,7 +13,7 @@ export class CreateCommandHandler implements ICommandHandler<CreateCommand> {
   ) { }
 
   async execute(command: CreateCommand): Promise<void> {
-    const accountExists = this.repository.exists(command.accountNumber);
+    const accountExists = await this.repository.exists(command.accountNumber);
 
     if(accountExists) {
       throw new DomainException("Account number already exists.");

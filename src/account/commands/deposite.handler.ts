@@ -2,7 +2,7 @@ import { ICommandHandler, EventPublisher, CommandHandler } from "@nestjs/cqrs";
 import { AccountRepository } from "../repositories/account.repository";
 import { DomainException } from "../domain.exception";
 import { DepositeCommand } from "./deposite.command";
-import { EventStoreException } from "src/event-store/event-store.exception";
+import { EventStoreException } from "../../event-store/event-store.exception";
 
 @CommandHandler(DepositeCommand)
 export class DepositeCommandHandler implements ICommandHandler<DepositeCommand> {
@@ -23,6 +23,7 @@ export class DepositeCommandHandler implements ICommandHandler<DepositeCommand> 
       if(e instanceof EventStoreException) {
         throw new DomainException("Unknow account number.");
       }
+      throw e;
     }
   }
 }

@@ -13,28 +13,28 @@ export class AccountController {
   @Post(":id")
   async createAccount(
     @Param()
-    id: string
+    params: { id: string }
   ) {
-    await this.commandBus.execute(new CreateCommand(id));
+    await this.commandBus.execute(new CreateCommand(params.id));
   }
 
   @Patch(":id/deposite")
   async deposite(
     @Param()
-    id: string,
+    params: { id: string },
     @Body()
-    data: { amount : number }
+    body: { amount : number }
   ) {
-    await this.commandBus.execute(new DepositeCommand(id, data.amount));
+    await this.commandBus.execute(new DepositeCommand(params.id, body.amount));
   }
 
   @Patch(":id/withdraw")
   async withdraw(
     @Param()
-    id: string,
+    params: { id: string },
     @Body()
-    data: { amount : number }
+    body: { amount : number }
   ) {
-    await this.commandBus.execute(new WithdrawCommand(id, data.amount));
+    await this.commandBus.execute(new WithdrawCommand(params.id, body.amount));
   }
 }

@@ -2,11 +2,11 @@ import { ICommandHandler, EventPublisher, CommandHandler } from "@nestjs/cqrs";
 import { AccountRepository } from "../repositories/account.repository";
 import { DomainException } from "../domain.exception";
 import { DepositeCommand } from "./deposite.command";
-import { EventStoreException } from "src/event-store/event-store.exception";
+import { EventStoreException } from "../../event-store/event-store.exception";
 import { WithdrawCommand } from "./withdraw.command";
 
 @CommandHandler(WithdrawCommand)
-export class DepositeCommandHandler implements ICommandHandler<DepositeCommand> {
+export class WithdrawCommandHandler implements ICommandHandler<DepositeCommand> {
 
   constructor(
     private readonly publisher: EventPublisher,

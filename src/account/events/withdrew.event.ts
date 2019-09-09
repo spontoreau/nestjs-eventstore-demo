@@ -2,7 +2,7 @@ import { AccountEvent } from "./account.event";
 
 export class WithdrewEvent extends AccountEvent {
   constructor(
-    public readonly aggregatedId: string,
+    aggregatedId: string,
     date: string,
     amount: number
   ) {

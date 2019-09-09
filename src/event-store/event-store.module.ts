@@ -1,20 +1,10 @@
-import { Module, Global, OnModuleInit } from "@nestjs/common";
-import { EventStoreConfiguration } from "./event-store.configuration";
+import { Module } from "@nestjs/common";
 import { EventStore } from "./event-store";
-import { EventPublisher, EventBus } from "@nestjs/cqrs";
-import { EventStorePublisher } from "./event-store.publisher";
+import { EventStorePublisher } from "./event-store.publisher"; 
+import { EventStoreConfiguration } from "./event-store.configuration";
 
-@Global()
 @Module({
-  providers: [EventStoreConfiguration, EventPublisher, EventStore],
-  exports: [EventStore]
+  providers: [EventStore, EventStorePublisher, EventStoreConfiguration],
+  exports: [EventStore, EventStorePublisher]
 })
-export class EventStoreModule implements OnModuleInit {
-  constructor(
-    private readonly eventBus: EventBus,
-    private readonly eventStore: EventStorePublisher
-  ) {}
-  onModuleInit() {
-    this.eventBus.publisher = this.eventStore;
-  }
-}
+export class EventStoreModule {}

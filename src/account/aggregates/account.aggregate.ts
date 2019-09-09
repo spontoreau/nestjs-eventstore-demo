@@ -21,8 +21,11 @@ class AccountStateImpl implements AccountState {
   ) {}
   
   get balance(): number {
-    const debit = this.debit.map(d => d[1]).reduce((prev, current) => prev + current);
-    const credit = this.credit.map(c => c[1]).reduce((prev, current) => prev + current);
+    let debit = 0
+    this.debit.forEach(d => debit += d[1]);
+      
+    let credit = 0;
+    this.credit.forEach(c => credit += c[1]);
     return credit - debit;
   }
 
@@ -59,14 +62,14 @@ export class AccountAggregate extends AggregateRoot {
       if(!this.isValidEvent(e)) {
         Logger.warn(`Unknow event: ${ JSON.stringify(event) }`)
       } else {
-        switch(e.type) {
-          case "Deposited":
+        switch(e.eventType) {
+          case "Withdrew":
             this.state.debit.push([
               e.data["date"],
               e.data["amount"]
             ])
             break;
-          case "Withdrew":
+          case "Deposited":
               this.state.credit.push([
                 e.data["date"],
                 e.data["amount"]
@@ -77,7 +80,7 @@ export class AccountAggregate extends AggregateRoot {
     });
   }
 
-  private isValidEvent(value: any): value is AccountEvent {
-    return value.streamName && value.type && value.data;
+  private isValidEvent(value: any): value is { streamId: string, eventType: string, data: Object } {
+    return value.streamId && value.eventType && value.data;
   }
 }

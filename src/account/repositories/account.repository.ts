@@ -1,5 +1,5 @@
 import { AccountAggregate } from "../aggregates/account.aggregate";
-import { EventStore } from "src/event-store/event-store";
+import { EventStore } from "../../event-store/event-store";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
