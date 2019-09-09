@@ -37,32 +37,32 @@ export class AccountController {
   }
 }
 
-class CreateAccountParams {
+export class CreateAccountParams {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  readonly id!: string;
 }
 
-class DepositeParams {
+export class DepositeParams {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  readonly id!: string;
 }
 
-class DepositeBody {
+export class DepositeBody {
   @IsNumber()
   @Min(1)
-  amount: number;
+  readonly amount!: number;
 }
 
-class WithdrawParams {
+export class WithdrawParams {
   @IsString()
   @IsNotEmpty()
-  id: string ;
+  readonly id!: string ;
 }
 
-class WithdrawBody {
+export class WithdrawBody {
   @IsNumber()
   @Min(1)
-  amount: number ;
+  readonly amount!: number ;
 }
