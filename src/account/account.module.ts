@@ -12,7 +12,7 @@ import { AccountRepository } from "./repositories/account.repository";
   controllers: [AccountController],
   imports: [CqrsModule, EventStoreModule, AccountModule],
   providers: [
-    EventBus, 
+    EventBus,
     EventStorePublisher,
     EventPublisher,
     AccountRepository,

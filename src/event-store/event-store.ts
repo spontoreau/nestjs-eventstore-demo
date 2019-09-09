@@ -8,10 +8,7 @@ import { Injectable } from "@nestjs/common";
 export class EventStore {
   private client!: TCPClient;
 
-  constructor(
-    private configuration: EventStoreConfiguration
-  ) {
-  }
+  constructor(private configuration: EventStoreConfiguration) {}
 
   connect() {
     this.client = new TCPClient(this.configuration.config);
@@ -22,14 +19,14 @@ export class EventStore {
   }
 
   async exists(streamName: string) {
-    if(!streamName) {
+    if (!streamName) {
       throw new EventStoreException("streamName is required!");
     }
     return await this.client.checkStreamExists(streamName);
   }
 
   async createEvent(event: Event) {
-    if(!event) {
+    if (!event) {
       throw new EventStoreException("Event is required!");
     }
 
@@ -37,14 +34,14 @@ export class EventStore {
   }
 
   async getEvents(streamName: string) {
-    if(!streamName) {
+    if (!streamName) {
       throw new EventStoreException("streamName is required!");
     }
 
     const exists = await this.exists(streamName);
 
-    if(!exists) {
-      throw new EventStoreException(`Unknow stream: ${ streamName }!`)
+    if (!exists) {
+      throw new EventStoreException(`Unknow stream: ${streamName}!`);
     }
 
     return await this.client.getAllStreamEvents(streamName);

@@ -6,16 +6,15 @@ import { AccountAggregate } from "../aggregates/account.aggregate";
 
 @CommandHandler(CreateCommand)
 export class CreateCommandHandler implements ICommandHandler<CreateCommand> {
-
   constructor(
     private readonly publisher: EventPublisher,
     private readonly repository: AccountRepository
-  ) { }
+  ) {}
 
   async execute(command: CreateCommand): Promise<void> {
     const accountExists = await this.repository.exists(command.accountNumber);
 
-    if(accountExists) {
+    if (accountExists) {
       throw new DomainException("Account number already exists.");
     } else {
       const aggregate = this.publisher.mergeObjectContext(

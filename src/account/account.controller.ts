@@ -6,15 +6,13 @@ import { WithdrawCommand } from "./commands/withdraw.command";
 
 @Controller("account")
 export class AccountController {
-  constructor(
-    private readonly commandBus: CommandBus
-  ) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   @Post(":id")
-  async createAccount(
-    @Param()
-    params: { id: string }
-  ) {
+  async createAccount(@Param()
+  params: {
+    id: string;
+  }) {
     await this.commandBus.execute(new CreateCommand(params.id));
   }
 
@@ -23,7 +21,7 @@ export class AccountController {
     @Param()
     params: { id: string },
     @Body()
-    body: { amount : number }
+    body: { amount: number }
   ) {
     await this.commandBus.execute(new DepositeCommand(params.id, body.amount));
   }
@@ -33,7 +31,7 @@ export class AccountController {
     @Param()
     params: { id: string },
     @Body()
-    body: { amount : number }
+    body: { amount: number }
   ) {
     await this.commandBus.execute(new WithdrawCommand(params.id, body.amount));
   }

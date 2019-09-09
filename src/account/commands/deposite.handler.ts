@@ -5,22 +5,22 @@ import { DepositeCommand } from "./deposite.command";
 import { EventStoreException } from "../../event-store/event-store.exception";
 
 @CommandHandler(DepositeCommand)
-export class DepositeCommandHandler implements ICommandHandler<DepositeCommand> {
-
+export class DepositeCommandHandler
+  implements ICommandHandler<DepositeCommand> {
   constructor(
     private readonly publisher: EventPublisher,
     private readonly repository: AccountRepository
-  ) { }
+  ) {}
 
   async execute(command: DepositeCommand): Promise<void> {
     try {
       const aggregate = this.publisher.mergeObjectContext(
         await this.repository.get(command.accountNumber)
-      )
+      );
       aggregate.deposite(command.amount);
       aggregate.commit();
-    } catch(e) {
-      if(e instanceof EventStoreException) {
+    } catch (e) {
+      if (e instanceof EventStoreException) {
         throw new DomainException("Unknow account number.");
       }
       throw e;
