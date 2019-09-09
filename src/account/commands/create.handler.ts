@@ -1,8 +1,8 @@
 import { ICommandHandler, EventPublisher, CommandHandler } from "@nestjs/cqrs";
 import { CreateCommand } from "./create.command";
 import { AccountRepository } from "../repositories/account.repository";
-import { DomainException } from "../domain.exception";
 import { AccountAggregate } from "../aggregates/account.aggregate";
+import { AccountAlreadyExistsException } from "../errors/account-already-exists-exception";
 
 @CommandHandler(CreateCommand)
 export class CreateCommandHandler implements ICommandHandler<CreateCommand> {
@@ -12,10 +12,10 @@ export class CreateCommandHandler implements ICommandHandler<CreateCommand> {
   ) {}
 
   async execute(command: CreateCommand): Promise<void> {
-    const accountExists = await this.repository.exists(command.accountNumber);
+    const aggregate = await this.repository.get(command.accountNumber);
 
-    if (accountExists) {
-      throw new DomainException("Account number already exists.");
+    if (!!aggregate) {
+      throw new AccountAlreadyExistsException(command.accountNumber);
     } else {
       const aggregate = this.publisher.mergeObjectContext(
         new AccountAggregate(command.accountNumber)

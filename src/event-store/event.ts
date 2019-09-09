@@ -1,5 +1,5 @@
 export interface Event {
-  streamName: string;
-  type: string;
+  streamId: string;
+  eventType: string;
   data: object;
 }

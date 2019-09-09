@@ -1,6 +1,5 @@
 import { TCPClient } from "geteventstore-promise";
 import { EventStoreConfiguration } from "./event-store.configuration";
-import { EventStoreException } from "./event-store.exception";
 import { Event } from "./event";
 import { Injectable } from "@nestjs/common";
 
@@ -19,31 +18,14 @@ export class EventStore {
   }
 
   async exists(streamName: string) {
-    if (!streamName) {
-      throw new EventStoreException("streamName is required!");
-    }
     return await this.client.checkStreamExists(streamName);
   }
 
   async createEvent(event: Event) {
-    if (!event) {
-      throw new EventStoreException("Event is required!");
-    }
-
-    await this.client.writeEvent(event.streamName, event.type, event.data);
+    await this.client.writeEvent(event.streamId, event.eventType, event.data);
   }
 
   async getEvents(streamName: string) {
-    if (!streamName) {
-      throw new EventStoreException("streamName is required!");
-    }
-
-    const exists = await this.exists(streamName);
-
-    if (!exists) {
-      throw new EventStoreException(`Unknow stream: ${streamName}!`);
-    }
-
     return await this.client.getAllStreamEvents(streamName);
   }
 }

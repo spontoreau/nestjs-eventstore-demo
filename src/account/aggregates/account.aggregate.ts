@@ -3,6 +3,7 @@ import { CreatedEvent } from "../events/created.event";
 import { DepositedEvent } from "../events/deposited.event";
 import { WithdrewEvent } from "../events/withdrew.event";
 import { Logger } from "@nestjs/common";
+import { isValidEvent } from "src/event-store/event-utils";
 
 export class AccountAggregate extends AggregateRoot {
   state!: AccountState;
@@ -30,7 +31,7 @@ export class AccountAggregate extends AggregateRoot {
 
   loadFromHistory(events: IEvent[]) {
     events.forEach(e => {
-      if (!this.isValidEvent(e)) {
+      if (!isValidEvent(e)) {
         Logger.warn(`Unknow event: ${JSON.stringify(event)}`);
       } else {
         switch (e.eventType) {
@@ -43,12 +44,6 @@ export class AccountAggregate extends AggregateRoot {
         }
       }
     });
-  }
-
-  private isValidEvent(
-    value: any
-  ): value is { streamId: string; eventType: string; data: Object } {
-    return value.streamId && value.eventType && value.data;
   }
 }
 

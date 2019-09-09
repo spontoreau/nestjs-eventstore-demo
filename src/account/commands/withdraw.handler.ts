@@ -1,9 +1,8 @@
 import { ICommandHandler, EventPublisher, CommandHandler } from "@nestjs/cqrs";
 import { AccountRepository } from "../repositories/account.repository";
-import { DomainException } from "../domain.exception";
 import { DepositeCommand } from "./deposite.command";
-import { EventStoreException } from "../../event-store/event-store.exception";
 import { WithdrawCommand } from "./withdraw.command";
+import { UnknowAccountException } from "../errors/unknow-account-exception";
 
 @CommandHandler(WithdrawCommand)
 export class WithdrawCommandHandler
@@ -14,21 +13,15 @@ export class WithdrawCommandHandler
   ) {}
 
   async execute(command: DepositeCommand): Promise<void> {
-    try {
-      const aggregate = this.publisher.mergeObjectContext(
-        await this.repository.get(command.accountNumber)
-      );
+    const accountAggregate = await this.repository.get(command.accountNumber);
 
-      if (command.amount > aggregate.state.balance) {
-        throw new DomainException("Not enought money.");
-      }
-
-      aggregate.withdraw(command.amount);
-      aggregate.commit();
-    } catch (e) {
-      if (e instanceof EventStoreException) {
-        throw new DomainException("Unknow account number.");
-      }
+    if(!accountAggregate) {
+      throw new UnknowAccountException(command.accountNumber);
     }
+    const aggregate = this.publisher.mergeObjectContext(
+      accountAggregate
+    );
+    aggregate.withdraw(command.amount);
+    aggregate.commit();
   }
 }

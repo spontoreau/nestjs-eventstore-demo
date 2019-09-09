@@ -10,10 +10,6 @@ export class EventStoreConfiguration {
       credentials: {
         username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || "admin",
         password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || "changeit"
-      },
-      poolOptions: {
-        min: 1,
-        max: 10
       }
     };
   }
