@@ -3,7 +3,7 @@ import { CreatedEvent } from "../events/created.event";
 import { DepositedEvent } from "../events/deposited.event";
 import { WithdrewEvent } from "../events/withdrew.event";
 import { Logger } from "@nestjs/common";
-import { isValidEvent } from "src/event-store/event-utils";
+import { isValidEvent } from "../../event-store/event-utils";
 
 export class AccountAggregate extends AggregateRoot {
   state!: AccountState;

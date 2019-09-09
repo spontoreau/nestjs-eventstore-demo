@@ -4,6 +4,11 @@ import { CreateCommand } from "./commands/create.command";
 import { DepositeCommand } from "./commands/deposite.command";
 import { WithdrawCommand } from "./commands/withdraw.command";
 import { IsString, IsNumber, IsNotEmpty, Min } from 'class-validator';
+import { CreateAccountParams } from "./models/params/create-account-params";
+import { DepositeBody } from "./models/bodies/deposite-body";
+import { DepositeParams } from "./models/params/deposite-params";
+import { WithdrawParams } from "./models/params/withdraw-params";
+import { WithdrawBody } from "./models/bodies/withdraw-body";
 
 @Controller("account")
 export class AccountController {
@@ -35,34 +40,4 @@ export class AccountController {
   ) {
     await this.commandBus.execute(new WithdrawCommand(params.id, body.amount));
   }
-}
-
-export class CreateAccountParams {
-  @IsString()
-  @IsNotEmpty()
-  readonly id!: string;
-}
-
-export class DepositeParams {
-  @IsString()
-  @IsNotEmpty()
-  readonly id!: string;
-}
-
-export class DepositeBody {
-  @IsNumber()
-  @Min(1)
-  readonly amount!: number;
-}
-
-export class WithdrawParams {
-  @IsString()
-  @IsNotEmpty()
-  readonly id!: string ;
-}
-
-export class WithdrawBody {
-  @IsNumber()
-  @Min(1)
-  readonly amount!: number ;
 }

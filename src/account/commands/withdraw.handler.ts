@@ -3,6 +3,7 @@ import { AccountRepository } from "../repositories/account.repository";
 import { DepositeCommand } from "./deposite.command";
 import { WithdrawCommand } from "./withdraw.command";
 import { UnknowAccountException } from "../errors/unknow-account-exception";
+import { NotEnougthMoneyException } from "../errors/not-enought-money-exception";
 
 @CommandHandler(WithdrawCommand)
 export class WithdrawCommandHandler
@@ -18,6 +19,11 @@ export class WithdrawCommandHandler
     if(!accountAggregate) {
       throw new UnknowAccountException(command.accountNumber);
     }
+
+    if(command.amount > accountAggregate.state.balance) {
+      throw new NotEnougthMoneyException(command.accountNumber);
+    }
+
     const aggregate = this.publisher.mergeObjectContext(
       accountAggregate
     );
