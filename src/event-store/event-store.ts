@@ -22,7 +22,7 @@ export class EventStore {
   }
 
   async createEvent(event: Event) {
-    await this.client.writeEvent(event.streamId, event.eventType, event.data);
+    await this.client.writeEvent(event.streamId, event.eventType, event.data, event.metadata);
   }
 
   async getEvents(streamName: string) {
