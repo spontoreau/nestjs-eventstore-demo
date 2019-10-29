@@ -32,11 +32,11 @@ export class AccountAggregate extends AggregateRoot {
   }
 
   private onDeposited(event: Deposited) {
-    this.state.credit.push([event.data["date"], event.data["amount"]]);
+    this.state.credits.push([event.data["date"], event.data["amount"]]);
   }
 
   private onWithdrew(event: Withdrew) {
-    this.state.credit.push([event.data["date"], event.data["amount"]]);
+    this.state.debits.push([event.data["date"], event.data["amount"]]);
   }
 
   protected getEventName(event): string {
@@ -50,24 +50,20 @@ export class AccountAggregate extends AggregateRoot {
 
 interface AccountState {
   id: string;
-  debit: Array<[string, number]>;
-  credit: Array<[string, number]>;
+  debits: Array<[string, number]>;
+  credits: Array<[string, number]>;
   balance: number;
 }
 
 class AccountStateImpl implements AccountState {
   constructor(
     public readonly id: string,
-    public debit: [string, number][] = [],
-    public credit: [string, number][] = []
+    public debits: [string, number][] = [],
+    public credits: [string, number][] = []
   ) {}
 
   get balance(): number {
-    let debit = 0;
-    this.debit.forEach(d => (debit += d[1]));
-
-    let credit = 0;
-    this.credit.forEach(c => (credit += c[1]));
-    return credit - debit;
+    const add = (value1: number, value2: number) => value1 + value2;
+    return this.credits.map(value => value[1]).reduce(add, 0) - this.debits.map(value => value[1]).reduce(add, 0);
   }
 }
