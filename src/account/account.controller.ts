@@ -3,7 +3,7 @@ import { CommandBus } from "@nestjs/cqrs";
 import { CreateCommand } from "./commands/create.command";
 import { DepositeCommand } from "./commands/deposite.command";
 import { WithdrawCommand } from "./commands/withdraw.command";
-import { IsString, IsNumber, IsNotEmpty, Min } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, Min } from "class-validator";
 import { CreateAccountParams } from "./models/params/create-account-params";
 import { DepositeBody } from "./models/bodies/deposite-body";
 import { DepositeParams } from "./models/params/deposite-params";
@@ -15,7 +15,8 @@ export class AccountController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post(":id")
-  async createAccount(@Param()
+  async createAccount(
+    @Param()
     params: CreateAccountParams
   ) {
     await this.commandBus.execute(new CreateCommand(params.id));

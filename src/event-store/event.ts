@@ -8,4 +8,3 @@ export abstract class Event implements IEvent {
     public readonly metadata: object = {}
   ) {}
 }
-

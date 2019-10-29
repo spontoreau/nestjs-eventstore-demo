@@ -16,17 +16,15 @@ export class WithdrawCommandHandler
   async execute(command: DepositeCommand): Promise<void> {
     const accountAggregate = await this.repository.get(command.accountNumber);
 
-    if(!accountAggregate) {
+    if (!accountAggregate) {
       throw new UnknowAccountException(command.accountNumber);
     }
 
-    if(command.amount > accountAggregate.state.balance) {
+    if (command.amount > accountAggregate.state.balance) {
       throw new NotEnougthMoneyException(command.accountNumber);
     }
 
-    const aggregate = this.publisher.mergeObjectContext(
-      accountAggregate
-    );
+    const aggregate = this.publisher.mergeObjectContext(accountAggregate);
     aggregate.withdraw(command.amount);
     aggregate.commit();
   }

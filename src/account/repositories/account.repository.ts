@@ -9,10 +9,10 @@ export class AccountRepository {
   async get(aggregateId: string): Promise<AccountAggregate> {
     const exists = await this.eventStore.exists(aggregateId);
 
-    if(!exists) {
+    if (!exists) {
       return undefined;
     }
-    
+
     const events = await this.eventStore.getEvents(aggregateId);
     const aggregate = new AccountAggregate(aggregateId);
     aggregate.loadFromHistory(events);

@@ -40,7 +40,7 @@ export class AccountAggregate extends AggregateRoot {
   }
 
   protected getEventName(event): string {
-    if(isValidEvent(event)) {
+    if (isValidEvent(event)) {
       return event.eventType;
     } else {
       return super.getEventName(event);
@@ -64,6 +64,9 @@ class AccountStateImpl implements AccountState {
 
   get balance(): number {
     const add = (value1: number, value2: number) => value1 + value2;
-    return this.credits.map(value => value[1]).reduce(add, 0) - this.debits.map(value => value[1]).reduce(add, 0);
+    return (
+      this.credits.map(value => value[1]).reduce(add, 0) -
+      this.debits.map(value => value[1]).reduce(add, 0)
+    );
   }
 }

@@ -14,13 +14,11 @@ export class DepositeCommandHandler
   async execute(command: DepositeCommand): Promise<void> {
     const accountAggregate = await this.repository.get(command.accountNumber);
 
-    if(!accountAggregate) {
+    if (!accountAggregate) {
       throw new UnknowAccountException(command.accountNumber);
     }
 
-    const aggregate = this.publisher.mergeObjectContext(
-      accountAggregate
-    );
+    const aggregate = this.publisher.mergeObjectContext(accountAggregate);
     aggregate.deposite(command.amount);
     aggregate.commit();
   }
