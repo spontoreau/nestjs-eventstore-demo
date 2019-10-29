@@ -1,8 +1,7 @@
 import { AggregateRoot, IEvent } from "@nestjs/cqrs";
-import { CreatedEvent } from "../events/created.event";
-import { DepositedEvent } from "../events/deposited.event";
-import { WithdrewEvent } from "../events/withdrew.event";
-import { Logger } from "@nestjs/common";
+import { Created } from "../events/created.event";
+import { Deposited } from "../events/deposited.event";
+import { Withdrew } from "../events/withdrew.event";
 import { isValidEvent } from "../../event-store/event-utils";
 
 export class AccountAggregate extends AggregateRoot {
@@ -10,40 +9,42 @@ export class AccountAggregate extends AggregateRoot {
 
   constructor(private readonly aggregateId: string) {
     super();
-    this.state = new AccountStateImpl(this.aggregateId);
   }
 
   create() {
-    this.apply(new CreatedEvent(this.aggregateId));
+    this.apply(new Created(this.aggregateId));
   }
 
   deposite(amount: number) {
     this.apply(
-      new DepositedEvent(this.aggregateId, new Date().toISOString(), amount)
+      new Deposited(this.aggregateId, new Date().toISOString(), amount)
     );
   }
 
   withdraw(amount: number) {
     this.apply(
-      new WithdrewEvent(this.aggregateId, new Date().toISOString(), amount)
+      new Withdrew(this.aggregateId, new Date().toISOString(), amount)
     );
   }
 
-  loadFromHistory(events: IEvent[]) {
-    events.forEach(e => {
-      if (!isValidEvent(e)) {
-        Logger.warn(`Unknow event: ${JSON.stringify(event)}`);
-      } else {
-        switch (e.eventType) {
-          case "Withdrew":
-            this.state.debit.push([e.data["date"], e.data["amount"]]);
-            break;
-          case "Deposited":
-            this.state.credit.push([e.data["date"], e.data["amount"]]);
-            break;
-        }
-      }
-    });
+  private onCreated(event: Created) {
+    this.state = new AccountStateImpl(this.aggregateId);
+  }
+
+  private onDeposited(event: Deposited) {
+    this.state.credit.push([event.data["date"], event.data["amount"]]);
+  }
+
+  private onWithdrew(event: Withdrew) {
+    this.state.credit.push([event.data["date"], event.data["amount"]]);
+  }
+
+  protected getEventName(event): string {
+    if(isValidEvent(event)) {
+      return event.eventType;
+    } else {
+      return super.getEventName(event);
+    }
   }
 }
 
