@@ -3,6 +3,7 @@ import { Created } from "../events/created.event";
 import { Deposited } from "../events/deposited.event";
 import { Withdrew } from "../events/withdrew.event";
 import { isValidEvent } from "../../event-store/event-utils";
+import { NotEnougthMoneyException } from "../errors/not-enought-money-exception";
 
 export class AccountAggregate extends AggregateRoot {
   state!: AccountState;
@@ -22,6 +23,10 @@ export class AccountAggregate extends AggregateRoot {
   }
 
   withdraw(amount: number) {
+    if (amount > this.state.balance) {
+      throw new NotEnougthMoneyException(this.aggregateId);
+    }
+
     this.apply(
       new Withdrew(this.aggregateId, new Date().toISOString(), amount)
     );

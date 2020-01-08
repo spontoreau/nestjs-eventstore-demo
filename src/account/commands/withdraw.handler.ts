@@ -20,10 +20,6 @@ export class WithdrawCommandHandler
       throw new UnknowAccountException(command.accountNumber);
     }
 
-    if (command.amount > accountAggregate.state.balance) {
-      throw new NotEnougthMoneyException(command.accountNumber);
-    }
-
     const aggregate = this.publisher.mergeObjectContext(accountAggregate);
     aggregate.withdraw(command.amount);
     aggregate.commit();
